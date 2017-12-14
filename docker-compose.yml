@@ -1,0 +1,7 @@
+# This docker-compose file builds the image
+version: '2'
+services:
+  build:
+    image: 'petzi/openldap'
+    build: .
+    command: /bin/sh -c "echo 'build finished' && exit"

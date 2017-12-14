@@ -1,0 +1,10 @@
+# This docker-compose file runs an empty ldap server 
+version: '2'
+services:
+  test:
+    image: 'petzi/openldap'
+    environment:
+      SLAPD_ROOTDN: "dc=example,dc=org"
+      SLAPD_ROOTPW: "password"
+    ports:
+      - "2389:389"

@@ -1,0 +1,22 @@
+dn: cn=default,ou=ppolicy,##SLAPD_ROOTDN##
+objectClass: applicationProcess
+objectClass: pwdPolicy
+cn: default
+pwdAllowUserChange: TRUE
+pwdAttribute: userPassword
+pwdCheckQuality: 1
+# 7 days
+pwdExpireWarning: 604800
+pwdFailureCountInterval: 0
+pwdGraceAuthNLimit: 0
+pwdInHistory: 5
+pwdLockout: TRUE
+# 600 seconds == 10 minutes
+pwdLockoutDuration: 600
+# password has no age
+pwdMaxAge: 0
+pwdMaxFailure: 5
+pwdMinAge: 0
+pwdMinLength: 6
+pwdMustChange: FALSE
+pwdSafeModify: FALSE

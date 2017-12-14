@@ -1,0 +1,20 @@
+dn: olcDatabase={-1}frontend,cn=config
+changetype: modify
+replace: olcAccess
+# Allow authenticated users to read the root entry
+olcAccess: {0} to dn.base=""
+  by users read
+  by * none
+# Allow authenticated users to query the subschema
+olcAccess: {1} to dn.base="cn=Subschema"
+  by users read
+  by * none
+# As a fallback, allow any user to read the base dn
+olcAccess: {3} to dn.base="##SLAPD_ROOTDN##"
+  by users read
+  by * none
+# Allow authentication against any entry and a user to read their own entry
+olcAccess: {4} to *
+  by self read
+  by anonymous auth
+  by * none

@@ -1,0 +1,5 @@
+dn: ##SLAPD_ROOTDN##
+objectclass: dcObject
+objectclass: organization
+o: ##SLAPD_ROOTDN##
+dc: ##slapd_domain_part##
