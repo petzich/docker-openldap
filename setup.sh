@@ -16,6 +16,7 @@ find_files(){
 	conf_mod_files=$(echo "${mod_files}" | grep "/setup/conf")
 	ldif_add_files=$(echo "${add_files}" | grep "/setup/ldif")
 	ldif_mod_files=$(echo "${mod_files}" | grep "/setup/ldif")
+	all_files=$(echo "${add_files}\n${mod_files}")
 }
 
 find_files
@@ -27,11 +28,13 @@ echo "$mod_files"
 
 # Replace variables in ldif files with values
 echo "# Replacing variables in LDIF files #"
-for f in $ldif_files; do
-	for v in $variable_map; do
-		eval var_val="\$$v"
-		sed -i "s/##$v##/${var_val}/g" $f
-	done
+for f in $all_files; do
+	if [ -f "$f" ]; then
+		for v in $variable_map; do
+			eval var_val="\$$v"
+			sed -i "s/##$v##/${var_val}/g" $f
+		done
+	fi
 done
 
 echo "# Applying ldif files to directory #"
