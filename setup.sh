@@ -26,13 +26,15 @@ echo "# Applying ldif files to directory #"
 
 if [ $1 = "conf" ]; then
 	# Process conf add files
-	for f in `ls -1 /setup/conf.dist/*.add.ldif /setup/conf/*.add.ldif`; do
+	conf_add_files=$(ls -1 /setup/conf.dist/*.add.ldif /setup/conf/*.add.ldif | sort)
+	for f in "${conf_add_files}"; do
 	    echo "==> $f"
 	    ldapadd -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f $f
 	done
 
 	# Process conf mod files
-	for f in `ls -1 /setup/conf.dist/*.mod.ldif /setup/conf/*.mod.ldif`; do
+	conf_mod_files=$(ls -1 /setup/conf.dist/*.mod.ldif /setup/conf/*.mod.ldif | sort)
+	for f in "${conf_mod_files}"; do
 	    echo "==> $f"
 	    ldapmodify -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f $f
 	done
@@ -40,13 +42,15 @@ if [ $1 = "conf" ]; then
 elif [ $1 == "ldif" ]; then
 
 	# Process ldif add files
-	for f in `ls -1 /setup/ldif.dist/*.add.ldif /setup/ldif/*.add.ldif`; do
+	ldif_add_files=$(ls -1 /setup/ldif.dist/*.add.ldif /setup/ldif/*.add.ldif | sort)
+	for f in "${ldif_add_files}"; do
 	    echo "==> $f"
 	    ldapadd -x -D "cn=manager,${SLAPD_ROOTDN}" -w ${SLAPD_ROOTPW} -f $f
 	done
 
 	# Process ldif mod files
-	for f in `ls -1 /setup/ldif.dist/*.mod.ldif /setup/ldif/*.mod.ldif`; do
+	ldif_mod_files=$(ls -1 /setup/ldif.dist/*.mod.ldif /setup/ldif/*.mod.ldif | sort)
+	for f in "${ldif_mod_files}"; do
 	    echo "==> $f"
 	    ldapmodify -x -D "cn=manager,${SLAPD_ROOTDN}" -w ${SLAPD_ROOTPW} -f $f
 	done
