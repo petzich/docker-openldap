@@ -21,10 +21,8 @@ find_files(){
 
 find_files
 
-echo "[DEBUG] \$add_files:"
-echo "$add_files"
-echo "[DEBUG] \$mod_files:"
-echo "$mod_files"
+echo "[DEBUG] \$all_files:"
+echo "$all_files"
 
 # Replace variables in ldif files with values
 echo "# Replacing variables in LDIF files #"
