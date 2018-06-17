@@ -38,29 +38,37 @@ echo "# Applying ldif files to directory #"
 
 if [ $1 = "conf" ]; then
 	# Process conf add files
-	for f in "${conf_add_files}"; do
-	    echo "==> $f"
-	    ldapadd -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f $f
+	for file in "${conf_add_files}"; do
+		if [ -f "$file" ]; then
+			echo "==> $file"
+			ldapadd -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f $file
+		fi
 	done
 
 	# Process conf mod files
-	for f in "${conf_mod_files}"; do
-	    echo "==> $f"
-	    ldapmodify -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f $f
+	for file in "${conf_mod_files}"; do
+		if [ -f "$file" ]; then
+			echo "==> $file"
+			ldapmodify -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f $file
+		fi
 	done
 
 elif [ $1 == "ldif" ]; then
 
 	# Process ldif add files
-	for f in "${ldif_add_files}"; do
-	    echo "==> $f"
-	    ldapadd -x -D "cn=manager,${SLAPD_ROOTDN}" -w ${SLAPD_ROOTPW} -f $f
+	for file in "${ldif_add_files}"; do
+		if [ -f "$file" ]; then
+			echo "==> $file"
+			ldapadd -x -D "cn=manager,${SLAPD_ROOTDN}" -w ${SLAPD_ROOTPW} -f $file
+		fi
 	done
 
 	# Process ldif mod files
-	for f in "${ldif_mod_files}"; do
-	    echo "==> $f"
-	    ldapmodify -x -D "cn=manager,${SLAPD_ROOTDN}" -w ${SLAPD_ROOTPW} -f $f
+	for file in "${ldif_mod_files}"; do
+		if [ -f "$file" ]; then
+			echo "==> $file"
+			ldapmodify -x -D "cn=manager,${SLAPD_ROOTDN}" -w ${SLAPD_ROOTPW} -f $file
+		fi
 	done
 
 else
