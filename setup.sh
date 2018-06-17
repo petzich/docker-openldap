@@ -9,9 +9,21 @@ echo "INFO: \$slapd_domain_part: $slapd_domain_part"
 variable_map="SLAPD_ROOTDN slapd_domain_part ${SLAPD_SETUP_EXTRA_VARS}"
 echo "INFO: \$variable_map: $variable_map"
 
-ldif_files=`ls -1 /setup/ldif.dist/*.ldif /setup/ldif/*.ldif /setup/conf.dist/*.ldif /setup/conf/*.ldif`
-echo "DEBUG: \$ldif_files:"
-echo "$ldif_files"
+find_files(){
+	add_files=$(find /setup -name *.add.ldif | sort)
+	mod_files=$(find /setup -name *.mod.ldif | sort)
+	conf_add_files=$(${add_files} | grep "/setup/conf")
+	conf_mod_files=$(${mod_files} | grep "/setup/conf")
+	ldif_add_files=$(${add_files} | grep "/setup/ldif")
+	ldif_mod_files=$(${mod_files} | grep "/setup/ldif")
+}
+
+find_files
+
+echo "[DEBUG] \$add_files:"
+echo "$add_files"
+echo "[DEBUG] \$mod_files:"
+echo "$mod_files"
 
 # Replace variables in ldif files with values
 echo "# Replacing variables in LDIF files #"
@@ -26,14 +38,12 @@ echo "# Applying ldif files to directory #"
 
 if [ $1 = "conf" ]; then
 	# Process conf add files
-	conf_add_files=$(ls -1 /setup/conf.dist/*.add.ldif /setup/conf/*.add.ldif | sort)
 	for f in "${conf_add_files}"; do
 	    echo "==> $f"
 	    ldapadd -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f $f
 	done
 
 	# Process conf mod files
-	conf_mod_files=$(ls -1 /setup/conf.dist/*.mod.ldif /setup/conf/*.mod.ldif | sort)
 	for f in "${conf_mod_files}"; do
 	    echo "==> $f"
 	    ldapmodify -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f $f
@@ -42,14 +52,12 @@ if [ $1 = "conf" ]; then
 elif [ $1 == "ldif" ]; then
 
 	# Process ldif add files
-	ldif_add_files=$(ls -1 /setup/ldif.dist/*.add.ldif /setup/ldif/*.add.ldif | sort)
 	for f in "${ldif_add_files}"; do
 	    echo "==> $f"
 	    ldapadd -x -D "cn=manager,${SLAPD_ROOTDN}" -w ${SLAPD_ROOTPW} -f $f
 	done
 
 	# Process ldif mod files
-	ldif_mod_files=$(ls -1 /setup/ldif.dist/*.mod.ldif /setup/ldif/*.mod.ldif | sort)
 	for f in "${ldif_mod_files}"; do
 	    echo "==> $f"
 	    ldapmodify -x -D "cn=manager,${SLAPD_ROOTDN}" -w ${SLAPD_ROOTPW} -f $f
