@@ -12,10 +12,10 @@ echo "INFO: \$variable_map: $variable_map"
 find_files(){
 	add_files=$(find /setup -name *.add.ldif | sort)
 	mod_files=$(find /setup -name *.mod.ldif | sort)
-	conf_add_files=$(${add_files} | grep "/setup/conf")
-	conf_mod_files=$(${mod_files} | grep "/setup/conf")
-	ldif_add_files=$(${add_files} | grep "/setup/ldif")
-	ldif_mod_files=$(${mod_files} | grep "/setup/ldif")
+	conf_add_files=$(echo "${add_files}" | grep "/setup/conf")
+	conf_mod_files=$(echo "${mod_files}" | grep "/setup/conf")
+	ldif_add_files=$(echo "${add_files}" | grep "/setup/ldif")
+	ldif_mod_files=$(echo "${mod_files}" | grep "/setup/ldif")
 }
 
 find_files
