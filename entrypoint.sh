@@ -8,13 +8,6 @@ echo "    $@"
 echo "Command without arguments:"
 echo "    $1"
 
-# This is a quick exit to the shell if anything else than "/usr/sbin/slapd" or "slapd" was passed as argument
-if [ $1 != "/usr/sbin/slapd" ] && [ $1 != "slapd" ]; then
-	echo "You have requested to start $1 instead of slapd."
-	echo "Dropping you straight to the shell."
-	exec "$@"
-fi
-
 if [ ! -d /etc/openldap/slapd.d ]; then
 	FIRST_START=1
 
@@ -43,10 +36,10 @@ if [ ! -d /etc/openldap/slapd.d ]; then
 
 	include_files="dyngroup.ldif cosine.ldif inetorgperson.ldif openldap.ldif corba.ldif pmi.ldif ppolicy.ldif misc.ldif nis.ldif"
 
-    ### This is used for sed breaklines
+	### This is used for sed breaklines
 	sed_break=$'\\\n'
 
-    ### Define the files to include
+	### Define the files to include
 	include_lines=""
 	for i in $include_files; do
 		include_lines="${include_lines}${sed_break}include: file:///etc/openldap/schema/${i}"
