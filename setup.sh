@@ -16,13 +16,10 @@ find_files(){
 	conf_mod_files=$(echo "${mod_files}" | grep "/setup/conf")
 	ldif_add_files=$(echo "${add_files}" | grep "/setup/ldif")
 	ldif_mod_files=$(echo "${mod_files}" | grep "/setup/ldif")
-	all_files=$(echo "${add_files}\n${mod_files}")
+	all_files=$(echo "${add_files}${mod_files}")
 }
 
 find_files
-
-echo "[DEBUG] \$all_files:"
-echo "$all_files"
 
 # Replace variables in ldif files with values
 echo "# Replacing variables in LDIF files #"
@@ -39,15 +36,17 @@ echo "# Applying ldif files to directory #"
 
 if [ $1 = "conf" ]; then
 	# Process conf add files
-	for file in "${conf_add_files}"; do
+	for file in ${conf_add_files}; do
 		if [ -f "$file" ]; then
 			echo "==> $file"
 			ldapadd -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f $file
+		else
+			echo "xxx $file is not a file. not processing"
 		fi
 	done
 
 	# Process conf mod files
-	for file in "${conf_mod_files}"; do
+	for file in ${conf_mod_files}; do
 		if [ -f "$file" ]; then
 			echo "==> $file"
 			ldapmodify -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f $file
@@ -57,7 +56,7 @@ if [ $1 = "conf" ]; then
 elif [ $1 == "ldif" ]; then
 
 	# Process ldif add files
-	for file in "${ldif_add_files}"; do
+	for file in ${ldif_add_files}; do
 		if [ -f "$file" ]; then
 			echo "==> $file"
 			ldapadd -x -D "cn=manager,${SLAPD_ROOTDN}" -w ${SLAPD_ROOTPW} -f $file
@@ -65,7 +64,7 @@ elif [ $1 == "ldif" ]; then
 	done
 
 	# Process ldif mod files
-	for file in "${ldif_mod_files}"; do
+	for file in ${ldif_mod_files}; do
 		if [ -f "$file" ]; then
 			echo "==> $file"
 			ldapmodify -x -D "cn=manager,${SLAPD_ROOTDN}" -w ${SLAPD_ROOTPW} -f $file
