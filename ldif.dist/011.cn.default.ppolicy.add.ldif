@@ -1,4 +1,4 @@
-dn: cn=default,ou=ppolicy,##SLAPD_ROOTDN##
+dn: cn=default,ou=ppolicy,${SLAPD_ROOTDN}
 objectClass: applicationProcess
 objectClass: pwdPolicy
 cn: default

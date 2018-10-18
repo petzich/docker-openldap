@@ -4,6 +4,7 @@ EXPOSE 389
 VOLUME /var/lib/openldap /var/log/openldap
 
 RUN apk add --no-cache \
+	gettext \
 	openldap \
 	openldap-back-mdb \
 	openldap-clients \

@@ -10,7 +10,7 @@ olcAccess: {1} to dn.base="cn=Subschema"
   by users read
   by * none
 # As a fallback, allow any user to read the base dn
-olcAccess: {3} to dn.base="##SLAPD_ROOTDN##"
+olcAccess: {3} to dn.base="${SLAPD_ROOTDN}"
   by users read
   by * none
 # Allow authentication against any entry and a user to read their own entry

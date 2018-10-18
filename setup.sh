@@ -4,9 +4,9 @@
 echo "### Starting setup.sh ###"
 
 # First fill some variables
-slapd_domain_part=`echo ${SLAPD_ROOTDN} | awk -F"=|," -e '{print $2}'`
-echo "INFO: \$slapd_domain_part: $slapd_domain_part"
-variable_map="SLAPD_ROOTDN slapd_domain_part ${SLAPD_SETUP_EXTRA_VARS}"
+export SLAPD_DOMAIN_PART=`echo ${SLAPD_ROOTDN} | awk -F"=|," -e '{print $2}'`
+echo "INFO: \$SLAPD_DOMAIN_PART: $SLAPD_DOMAIN_PART"
+variable_map="\$SLAPD_ROOTDN \$SLAPD_DOMAIN_PART \$SLAPD_SETUP_EXTRA_VARS"
 echo "INFO: \$variable_map: $variable_map"
 
 find_files(){
@@ -16,7 +16,7 @@ find_files(){
 	conf_mod_files=$(echo "${mod_files}" | grep "/setup/conf")
 	ldif_add_files=$(echo "${add_files}" | grep "/setup/ldif")
 	ldif_mod_files=$(echo "${mod_files}" | grep "/setup/ldif")
-	all_files=$(echo "${add_files}${mod_files}")
+	all_files=$(find /setup -name *.ldif | sort)
 }
 
 find_files
@@ -25,10 +25,9 @@ find_files
 echo "# Replacing variables in LDIF files #"
 for f in $all_files; do
 	if [ -f "$f" ]; then
-		for v in $variable_map; do
-			eval var_val="\$$v"
-			sed -i "s/##$v##/${var_val}/g" $f
-		done
+		cp "$f" "$f.bak"
+		echo "Replacing envs in $f"
+		envsubst <"$f.bak" >"$f"
 	fi
 done
 
