@@ -10,13 +10,13 @@ variable_map="\$SLAPD_ROOTDN \$SLAPD_DOMAIN_PART \$SLAPD_SETUP_EXTRA_VARS"
 echo "INFO: \$variable_map: $variable_map"
 
 find_files(){
-	add_files=$(find /setup -name *.add.ldif | sort)
-	mod_files=$(find /setup -name *.mod.ldif | sort)
+	all_files=$(find /setup -name *.ldif | sort)
+	add_files=$(echo "${all_files}" | grep "add\.ldif")
+	mod_files=$(echo "${all_files}" | grep "mod\.ldif")
 	conf_add_files=$(echo "${add_files}" | grep "/setup/conf")
 	conf_mod_files=$(echo "${mod_files}" | grep "/setup/conf")
 	ldif_add_files=$(echo "${add_files}" | grep "/setup/ldif")
 	ldif_mod_files=$(echo "${mod_files}" | grep "/setup/ldif")
-	all_files=$(find /setup -name *.ldif | sort)
 }
 
 find_files
