@@ -12,7 +12,8 @@ The following environment variables are provided:
 
 * `SLAPD_ROOTDN` (required) a value such as `dc=example,dc=org`
 * `SLAPD_ROOTPW` (required) the password for the administrative user. Bind DN is `cn=manager,dc=example,dc=org`
-* `SLAPD_SETUP_EXTRA_VARS` (optional) A space-separated list of extra variables used in your LDIF files. Example: `MYAPP_VAR1 MYAPP_VAR2`. These variables in your LDIF files are then replaced with the values of the environment variables.
+
+Any other variables should be provided to the Docker container if they are defined as variables in any LDIF files.
 
 ### Standalone
 This image is intended to be used by extending in your own image. To run the image as-is, you can issue the following command:
