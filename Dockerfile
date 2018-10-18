@@ -1,7 +1,7 @@
 FROM alpine:3.7
 
 EXPOSE 389
-VOLUME /var/lib/openldap /var/log/openldap
+VOLUME /var/lib/openldap
 
 RUN apk add --no-cache \
 	gettext \
