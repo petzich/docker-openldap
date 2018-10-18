@@ -16,7 +16,7 @@ clean:
 
 test:
 	$(COMPOSE) -f $(TEST) down -v
-	$(COMPOSE) -f $(TEST) run test slapd -t
+	$(COMPOSE) -f $(TEST) run test slaptest
 	$(COMPOSE) -f $(TEST) down -v
 
 run:
