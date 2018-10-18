@@ -12,7 +12,7 @@ build: Dockerfile conf.dist/*.ldif ldif.dist/*.ldif
 clean:
 	$(COMPOSE) down -v
 	$(COMPOSE) -f $(TEST) down -v
-	$(DOCKER) rmi test_test
+	- $(DOCKER) rmi test_test
 
 test:
 	$(COMPOSE) -f $(TEST) down -v
