@@ -4,37 +4,46 @@
 echo "### Starting setup.sh ###"
 
 # First fill some variables
-slapd_domain_part=`echo ${SLAPD_ROOTDN} | awk -F"=|," -e '{print $2}'`
-echo "INFO: \$slapd_domain_part: $slapd_domain_part"
-variable_map="SLAPD_ROOTDN slapd_domain_part ${SLAPD_SETUP_EXTRA_VARS}"
-echo "INFO: \$variable_map: $variable_map"
+export SLAPD_DOMAIN_PART=`echo ${SLAPD_ROOTDN} | awk -F"=|," -e '{print $2}'`
+echo "INFO: \$SLAPD_DOMAIN_PART: $SLAPD_DOMAIN_PART"
 
 find_files(){
-	add_files=$(find /setup -name *.add.ldif | sort)
-	mod_files=$(find /setup -name *.mod.ldif | sort)
+	all_files=$(find /setup -name *.ldif | sort)
+	add_files=$(echo "${all_files}" | grep "add\.ldif")
+	mod_files=$(echo "${all_files}" | grep "mod\.ldif")
+	conf_files=$(echo "${all_files}" | grep "/setup/conf")
+	ldif_files=$(echo "${all_files}" | grep "/setup/ldif")
 	conf_add_files=$(echo "${add_files}" | grep "/setup/conf")
 	conf_mod_files=$(echo "${mod_files}" | grep "/setup/conf")
 	ldif_add_files=$(echo "${add_files}" | grep "/setup/ldif")
 	ldif_mod_files=$(echo "${mod_files}" | grep "/setup/ldif")
-	all_files=$(echo "${add_files}${mod_files}")
 }
 
-find_files
+replace_env_in_file() {
+	f=${1}
+	cp "$f" "$f.bak"
+	echo "Replacing envs in $f"
+	envsubst <"$f.bak" >"$f"
+}
 
-# Replace variables in ldif files with values
-echo "# Replacing variables in LDIF files #"
-for f in $all_files; do
-	if [ -f "$f" ]; then
-		for v in $variable_map; do
-			eval var_val="\$$v"
-			sed -i "s/##$v##/${var_val}/g" $f
-		done
-	fi
-done
+replace_conf() {
+	find_files
+	for f in $conf_files; do
+		replace_env_in_file "$f"
+	done
+}
+
+replace_ldif() {
+	find_files
+	for f in $ldif_files; do
+		replace_env_in_file "$f"
+	done
+}
 
 echo "# Applying ldif files to directory #"
 
 if [ $1 = "conf" ]; then
+	replace_conf
 	# Process conf add files
 	for file in ${conf_add_files}; do
 		if [ -f "$file" ]; then
@@ -54,7 +63,7 @@ if [ $1 = "conf" ]; then
 	done
 
 elif [ $1 == "ldif" ]; then
-
+	replace_ldif
 	# Process ldif add files
 	for file in ${ldif_add_files}; do
 		if [ -f "$file" ]; then

@@ -27,11 +27,10 @@ This image is intended to be used by extending with your own docker image. Use a
 * `conf/`
 * `ldif/`
 
-### Volumes
-Two volumes are provided. You should create volume containers for those volumes if you want data to persist across restarts (especially /var/lib/openldap/).
+### Volume
+A volume is provided for the ldap database. You should create a volume container if you want data to persist across restarts.
 
 * `/var/lib/openldap/`
-* `/var/log/openldap/`
 
 Setup script
 ------------
@@ -54,27 +53,24 @@ The file extension in all directories has a meaning:
 * `*.mod.ldif` - use `ldapmodify` to process the file
 
 ### Variables
-The ldif files can contain variables, they should be surrounded by double-hashes, example: `##MYAPP_VAR1##`
+The ldif files can contain variables, they should be surrounded by environment variable quoting, example: `${MYAPP_VAR1}`
 In order for `setup.sh` to replace the variable, you should provide the following environment variables when starting the container:
 
-* `SLAPD_SETUP_EXTRA_VARS="MYAPP_VAR1"`
 * `MYAPP_VAR1="my value of var1"`
 
 Contributing
 ------------
 
-There is a Vagrant machine for local development. Common commands:
+You can use any editor to do developping or bugfixing. The following sequence of Makefile targets will give you a good impression if your changes work:
 
 ```
-vagrant up
-vagrant ssh
-make
-make run
+make clean build test
 ```
-This will run an ldap server with an empty rootdn. To connect from your host using an LDAP browser, use the following information:
+
+To run a test server, issue the command `docker-compose run`. This will run an ldap server with an empty rootdn. To connect from your host using an LDAP browser, use the following information:
 
 * port: `localhost:2389`
 * user: `cn=manager,dc=example,dc=org`
-* password: `test`
+* password: `password`
 
 If you see something missing in the image or have a bugfix, please submit a pull request. You can also submit an issue, but pull requests will usually be processed faster.

@@ -1,3 +1,3 @@
-dn: ou=ppolicy,##SLAPD_ROOTDN##
+dn: ou=ppolicy,${SLAPD_ROOTDN}
 objectclass: organizationalUnit
 ou: ppolicy
