@@ -40,10 +40,10 @@ if [ ! -d /etc/openldap/slapd.d ]; then
 	generated_file="/etc/openldap/slapd.ldif.generated"
 	cp /setup/slapd.ldif/pre-include.ldif "$generated_file.orig"
 	for i in $include_files; do
-		echo "include: file:///etc/openldap/schema/$i" >> "$generated_file.orig"
-		echo "" >> "$generated_file.orig"
+		echo "include: file:///etc/openldap/schema/$i" >>"$generated_file.orig"
+		echo "" >>"$generated_file.orig"
 	done
-	cat /setup/slapd.ldif/post-include.ldif >> "$generated_file.orig"
+	cat /setup/slapd.ldif/post-include.ldif >>"$generated_file.orig"
 	envsubst <"$generated_file.orig" >"$generated_file"
 
 	echo "Generating configuration"
