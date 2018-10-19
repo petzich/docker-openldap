@@ -1,0 +1,14 @@
+dn: cn=config
+objectClass: olcGlobal
+cn: config
+
+dn: cn=module,cn=config
+objectClass: olcModuleList
+cn: module
+olcModulepath:	/usr/lib/openldap
+olcModuleload:	back_mdb.so
+
+dn: cn=schema,cn=config
+objectClass: olcSchemaConfig
+cn: schema
+

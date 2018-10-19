@@ -32,43 +32,22 @@ if [ ! -d /etc/openldap/slapd.d ]; then
 	mkdir /var/lib/openldap/openldap-data
 	chown ldap:ldap /var/lib/openldap/openldap-data
 
-	include_files="dyngroup.ldif cosine.ldif inetorgperson.ldif openldap.ldif corba.ldif pmi.ldif ppolicy.ldif misc.ldif nis.ldif"
-
-	### This is used for sed breaklines
-	sed_break=$'\\\n'
-
-	### Define the files to include
-	include_lines=""
-	for i in $include_files; do
-		include_lines="${include_lines}${sed_break}include: file:///etc/openldap/schema/${i}"
-	done
-
+	include_files="core.ldif dyngroup.ldif cosine.ldif inetorgperson.ldif openldap.ldif corba.ldif pmi.ldif ppolicy.ldif misc.ldif nis.ldif"
 	config_rootpw_hash=$(slappasswd -s "${SLAPD_ROOTPW}")
-	echo "$SLAPD_ROOTPW" >/slapd_config_rootpw
-	chmod 400 /slapd_config_rootpw
+	export config_rootpw_hash
 
-	# Copy the sample file to edit
+	# Assemble the slapd.ldif file
 	generated_file="/etc/openldap/slapd.ldif.generated"
-	cp /etc/openldap/slapd.ldif $generated_file
-	sed -i "s/^olcSuffix.*$/olcSuffix: ${SLAPD_ROOTDN}/g" $generated_file
-	sed -i "s/^olcRootDN.*$/olcRootDN: cn=manager,${SLAPD_ROOTDN}/g" $generated_file
-	# In the following sed statement, special characters are used to deal with slashes in hashed passwords
-	sed -i "s|^olcRootPW.*$|olcRootPW: ${config_rootpw_hash}|g" $generated_file
-	# PID and ARG file is not required for docker container
-	sed -i "/^olcPidFile.*$/d" $generated_file
-	sed -i "/^olcArgsFile.*$/d" $generated_file
-	# Remove empty lines and comment lines
-	sed -i "/^\s*$/d" $generated_file
-	sed -i "/^#.*$/d" $generated_file
-	# For proper parsing, insert an empty line before lines beginning with "dn: "
-	sed -i "/^dn\:/i${sed_break}" $generated_file
-	# Add the include_lines to the file
-	sed -i "/^include\:/a ${include_lines}" $generated_file
-	# An empty line before each include statement
-	sed -i "/^include\:/i${sed_break}" $generated_file
+	cp /setup/slapd.ldif/pre-include.ldif "$generated_file.orig"
+	for i in $include_files; do
+		echo "include: file:///etc/openldap/schema/$i" >> "$generated_file.orig"
+		echo "" >> "$generated_file.orig"
+	done
+	cat /setup/slapd.ldif/post-include.ldif >> "$generated_file.orig"
+	envsubst <"$generated_file.orig" >"$generated_file"
 
 	echo "Generating configuration"
-	/usr/sbin/slapadd -n 0 -F /etc/openldap/slapd.d -l /etc/openldap/slapd.ldif.generated
+	/usr/sbin/slapadd -n 0 -F /etc/openldap/slapd.d -l "$generated_file"
 
 	# As the standard configuration generates a "no-one allowed" rule
 	# on (olcDatabase=config,cn=config) we need to hard-overwrite

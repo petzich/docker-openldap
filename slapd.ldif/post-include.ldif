@@ -1,0 +1,16 @@
+
+dn: olcDatabase=frontend,cn=config
+objectClass: olcDatabaseConfig
+objectClass: olcFrontendConfig
+olcDatabase: frontend
+
+dn: olcDatabase=mdb,cn=config
+objectClass: olcDatabaseConfig
+objectClass: olcMdbConfig
+olcDatabase: mdb
+olcSuffix: ${SLAPD_ROOTDN}
+olcRootDN: cn=manager,${SLAPD_ROOTDN}
+olcRootPW: ${config_rootpw_hash} 
+olcDbDirectory:	/var/lib/openldap/openldap-data
+olcDbIndex: objectClass eq
+
