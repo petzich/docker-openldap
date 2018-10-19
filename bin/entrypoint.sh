@@ -4,7 +4,7 @@
 
 echo "Starting entrypoint.sh"
 echo "Command passed to entrypoint.sh:"
-echo "    $@"
+echo "    $*"
 echo "Command without arguments:"
 echo "    $1"
 
