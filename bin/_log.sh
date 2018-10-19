@@ -10,4 +10,3 @@ log() {
 log_fatal() {
 	log "[FATAL] $*"
 }
-
