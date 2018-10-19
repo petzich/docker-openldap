@@ -12,6 +12,10 @@ This changelog follows [Semantic Versioning](http://semver.org).
 
 - Generate slapd.ldif.generated with pre-generated config files
 
+### Fixed
+
+- Many shellcheck suggestions in scripts
+
 ## 0.4.0 - 2018-10-18
 
 ### Breaking Changes
