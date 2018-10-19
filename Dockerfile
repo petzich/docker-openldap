@@ -8,7 +8,8 @@ RUN apk add --no-cache \
 	openldap \
 	openldap-back-mdb \
 	openldap-clients \
-	openldap-overlay-all
+	openldap-overlay-all \
+	perl-archive-zip
 
 # Copy the entrypoint scripts
 COPY bin/*.sh /

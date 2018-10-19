@@ -50,8 +50,14 @@ if [ ! -d /etc/openldap/slapd.d ]; then
 	# As the standard configuration generates a "no-one allowed" rule
 	# on (olcDatabase=config,cn=config) we need to hard-overwrite
 	# this value to allow the local root user SASL-access to cn=config.
+	# And after that fix the checksum of the file.
 	config_db_file="/etc/openldap/slapd.d/cn=config/olcDatabase={0}config.ldif"
 	sed -i 's/^olcAccess:.*$/olcAccess: to dn.subtree="cn=config" by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" manage by users read by * none/g' $config_db_file
+	grep -v "^#" "$config_db_file" >"$config_db_file.nocomments"
+	new_crc32=$(crc32 "$config_db_file.nocomments")
+	log "New CRC32: $new_crc32"
+	sed -i "s/^# CRC32/# CRC32 $new_crc32/g" $config_db_file
+	rm "$config_db_file.nocomments"
 
 	chown -R ldap:ldap /etc/openldap/slapd.d/
 	exec /usr/sbin/slapd -u ldap -g ldap -F /etc/openldap/slapd.d -h ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi &
