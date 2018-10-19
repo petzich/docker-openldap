@@ -10,8 +10,8 @@ echo "INFO: \$SLAPD_DOMAIN_PART: $SLAPD_DOMAIN_PART"
 
 find_files() {
 	all_files=$(find /setup -name "*.ldif" | sort)
-	add_files=$(echo "${all_files}" | grep "add\.ldif")
-	mod_files=$(echo "${all_files}" | grep "mod\.ldif")
+	add_files=$(echo "${all_files}" | grep "add.ldif")
+	mod_files=$(echo "${all_files}" | grep "mod.ldif")
 	conf_files=$(echo "${all_files}" | grep "/setup/conf")
 	ldif_files=$(echo "${all_files}" | grep "/setup/ldif")
 	conf_add_files=$(echo "${add_files}" | grep "/setup/conf")
