@@ -29,3 +29,15 @@ shell:
 	$(COMPOSE) -f $(TEST) up -d
 	$(COMPOSE) -f $(TEST) exec test /bin/sh
 	$(COMPOSE) -f $(TEST) down -v
+
+.PHONY: shellcheck
+shellcheck:
+	find bin/ -name "*.sh" -exec $(DOCKER) run --rm -v "${PWD}:/mnt" koalaman/shellcheck:stable {} +
+
+.PHONY: shfmt-check
+shfmt-check:
+	$(DOCKER) run --rm -v "${PWD}:/mnt" -w /mnt jamesmstone/shfmt -d bin/
+
+.PHONY: shfmt-format
+shfmt-format:
+	$(DOCKER) run --rm -v "${PWD}:/mnt" -w /mnt jamesmstone/shfmt -w bin/
