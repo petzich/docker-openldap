@@ -8,7 +8,7 @@ export SLAPD_DOMAIN_PART=$(echo ${SLAPD_ROOTDN} | awk -F"=|," -e '{print $2}')
 echo "INFO: \$SLAPD_DOMAIN_PART: $SLAPD_DOMAIN_PART"
 
 find_files() {
-	all_files=$(find /setup -name *.ldif | sort)
+	all_files=$(find /setup -name "*.ldif" | sort)
 	add_files=$(echo "${all_files}" | grep "add\.ldif")
 	mod_files=$(echo "${all_files}" | grep "mod\.ldif")
 	conf_files=$(echo "${all_files}" | grep "/setup/conf")
@@ -42,13 +42,13 @@ replace_ldif() {
 
 echo "# Applying ldif files to directory #"
 
-if [ $1 = "conf" ]; then
+if [ "$1" = "conf" ]; then
 	replace_conf
 	# Process conf add files
 	for file in ${conf_add_files}; do
 		if [ -f "$file" ]; then
 			echo "==> $file"
-			ldapadd -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f $file
+			ldapadd -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f "$file"
 		else
 			echo "xxx $file is not a file. not processing"
 		fi
@@ -58,17 +58,17 @@ if [ $1 = "conf" ]; then
 	for file in ${conf_mod_files}; do
 		if [ -f "$file" ]; then
 			echo "==> $file"
-			ldapmodify -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f $file
+			ldapmodify -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f "$file"
 		fi
 	done
 
-elif [ $1 == "ldif" ]; then
+elif [ "$1" = "ldif" ]; then
 	replace_ldif
 	# Process ldif add files
 	for file in ${ldif_add_files}; do
 		if [ -f "$file" ]; then
 			echo "==> $file"
-			ldapadd -x -D "cn=manager,${SLAPD_ROOTDN}" -w ${SLAPD_ROOTPW} -f $file
+			ldapadd -x -D "cn=manager,${SLAPD_ROOTDN}" -w "${SLAPD_ROOTPW}" -f "$file"
 		fi
 	done
 
@@ -76,7 +76,7 @@ elif [ $1 == "ldif" ]; then
 	for file in ${ldif_mod_files}; do
 		if [ -f "$file" ]; then
 			echo "==> $file"
-			ldapmodify -x -D "cn=manager,${SLAPD_ROOTDN}" -w ${SLAPD_ROOTPW} -f $file
+			ldapmodify -x -D "cn=manager,${SLAPD_ROOTDN}" -w "${SLAPD_ROOTPW}" -f "$file"
 		fi
 	done
 
