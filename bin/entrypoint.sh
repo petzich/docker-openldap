@@ -9,8 +9,6 @@ echo "Command without arguments:"
 echo "    $1"
 
 if [ ! -d /etc/openldap/slapd.d ]; then
-	FIRST_START=1
-
 	echo "SLAPD_ROOTDN = $SLAPD_ROOTDN"
 	if [ -z "$SLAPD_ROOTDN" ]; then
 		echo -n "Error: SLAPD_ROOTDN not set. " >&2
