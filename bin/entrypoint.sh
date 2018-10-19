@@ -44,7 +44,7 @@ if [ ! -d /etc/openldap/slapd.d ]; then
 	done
 
 	config_rootpw_hash=$(slappasswd -s "${SLAPD_ROOTPW}")
-	printf "$SLAPD_ROOTPW" >/slapd_config_rootpw
+	echo "$SLAPD_ROOTPW" >/slapd_config_rootpw
 	chmod 400 /slapd_config_rootpw
 
 	# Copy the sample file to edit
