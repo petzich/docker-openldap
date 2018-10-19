@@ -4,7 +4,8 @@
 echo "### Starting setup.sh ###"
 
 # First fill some variables
-export SLAPD_DOMAIN_PART=$(echo ${SLAPD_ROOTDN} | awk -F"=|," -e '{print $2}')
+SLAPD_DOMAIN_PART=$(echo "${SLAPD_ROOTDN}" | awk -F"=|," -e '{print $2}')
+export SLAPD_DOMAIN_PART
 echo "INFO: \$SLAPD_DOMAIN_PART: $SLAPD_DOMAIN_PART"
 
 find_files() {
