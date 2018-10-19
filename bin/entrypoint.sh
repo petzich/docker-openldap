@@ -11,11 +11,11 @@ echo "    $1"
 if [ ! -d /etc/openldap/slapd.d ]; then
 	echo "SLAPD_ROOTDN = $SLAPD_ROOTDN"
 	if [ -z "$SLAPD_ROOTDN" ]; then
-		echo -n "Error: SLAPD_ROOTDN not set. " >&2
+		echo "Error: SLAPD_ROOTDN not set. " >&2
 		exit 1
 	fi
 	if [ -z "$SLAPD_ROOTPW" ]; then
-		echo -n "Error: SLAPD_ROOTPW not set. " >&2
+		echo "Error: SLAPD_ROOTPW not set. " >&2
 		exit 1
 	fi
 
