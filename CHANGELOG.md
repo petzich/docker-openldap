@@ -2,6 +2,16 @@
 
 This changelog follows [Semantic Versioning](http://semver.org).
 
+## 0.4.1 - 2018-10-19
+
+### Added
+
+- Useful logging output with timestamp and script name
+
+### Changed
+
+- Generate slapd.ldif.generated with pre-generated config files
+
 ## 0.4.0 - 2018-10-18
 
 ### Breaking Changes
