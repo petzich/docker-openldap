@@ -4,10 +4,10 @@
 echo "### Starting setup.sh ###"
 
 # First fill some variables
-export SLAPD_DOMAIN_PART=`echo ${SLAPD_ROOTDN} | awk -F"=|," -e '{print $2}'`
+export SLAPD_DOMAIN_PART=$(echo ${SLAPD_ROOTDN} | awk -F"=|," -e '{print $2}')
 echo "INFO: \$SLAPD_DOMAIN_PART: $SLAPD_DOMAIN_PART"
 
-find_files(){
+find_files() {
 	all_files=$(find /setup -name *.ldif | sort)
 	add_files=$(echo "${all_files}" | grep "add\.ldif")
 	mod_files=$(echo "${all_files}" | grep "mod\.ldif")

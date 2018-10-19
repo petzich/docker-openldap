@@ -13,11 +13,11 @@ if [ ! -d /etc/openldap/slapd.d ]; then
 
 	echo "SLAPD_ROOTDN = $SLAPD_ROOTDN"
 	if [ -z "$SLAPD_ROOTDN" ]; then
-		echo -n >&2 "Error: SLAPD_ROOTDN not set. "
+		echo -n "Error: SLAPD_ROOTDN not set. " >&2
 		exit 1
 	fi
 	if [ -z "$SLAPD_ROOTPW" ]; then
-		echo -n >&2 "Error: SLAPD_ROOTPW not set. "
+		echo -n "Error: SLAPD_ROOTPW not set. " >&2
 		exit 1
 	fi
 
@@ -45,8 +45,8 @@ if [ ! -d /etc/openldap/slapd.d ]; then
 		include_lines="${include_lines}${sed_break}include: file:///etc/openldap/schema/${i}"
 	done
 
-	config_rootpw_hash=`slappasswd -s "${SLAPD_ROOTPW}"`
-	printf "$SLAPD_ROOTPW" > /slapd_config_rootpw
+	config_rootpw_hash=$(slappasswd -s "${SLAPD_ROOTPW}")
+	printf "$SLAPD_ROOTPW" >/slapd_config_rootpw
 	chmod 400 /slapd_config_rootpw
 
 	# Copy the sample file to edit
@@ -72,27 +72,27 @@ if [ ! -d /etc/openldap/slapd.d ]; then
 	echo "Generating configuration"
 	/usr/sbin/slapadd -n 0 -F /etc/openldap/slapd.d -l /etc/openldap/slapd.ldif.generated
 
-    # As the standard configuration generates a "no-one allowed" rule
-    # on (olcDatabase=config,cn=config) we need to hard-overwrite
-    # this value to allow the local root user SASL-access to cn=config.
-    config_db_file="/etc/openldap/slapd.d/cn=config/olcDatabase={0}config.ldif"
-    sed -i 's/^olcAccess:.*$/olcAccess: to dn.subtree="cn=config" by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" manage by users read by * none/g' $config_db_file
+	# As the standard configuration generates a "no-one allowed" rule
+	# on (olcDatabase=config,cn=config) we need to hard-overwrite
+	# this value to allow the local root user SASL-access to cn=config.
+	config_db_file="/etc/openldap/slapd.d/cn=config/olcDatabase={0}config.ldif"
+	sed -i 's/^olcAccess:.*$/olcAccess: to dn.subtree="cn=config" by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" manage by users read by * none/g' $config_db_file
 
-    chown -R ldap:ldap /etc/openldap/slapd.d/
-    echo "Starting setup.sh conf"
-    exec /usr/sbin/slapd -u ldap -g ldap -F /etc/openldap/slapd.d -h ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi &
-    sleep 1
-    ./setup.sh conf
-    killall slapd
-    sleep 1
+	chown -R ldap:ldap /etc/openldap/slapd.d/
+	echo "Starting setup.sh conf"
+	exec /usr/sbin/slapd -u ldap -g ldap -F /etc/openldap/slapd.d -h ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi &
+	sleep 1
+	./setup.sh conf
+	killall slapd
+	sleep 1
 
-    chown -R ldap:ldap /etc/openldap/slapd.d/
-    echo "Starting setup.sh ldif"
-    exec /usr/sbin/slapd -u ldap -g ldap -F /etc/openldap/slapd.d &
-    sleep 1
-    ./setup.sh ldif
-    killall slapd
-    sleep 1
+	chown -R ldap:ldap /etc/openldap/slapd.d/
+	echo "Starting setup.sh ldif"
+	exec /usr/sbin/slapd -u ldap -g ldap -F /etc/openldap/slapd.d &
+	sleep 1
+	./setup.sh ldif
+	killall slapd
+	sleep 1
 
 fi
 
