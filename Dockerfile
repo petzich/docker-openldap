@@ -11,7 +11,7 @@ RUN apk add --no-cache \
 	openldap-overlay-all
 
 # Copy the entrypoint scripts
-COPY entrypoint.sh setup.sh /
+COPY bin/*.sh /
 RUN chmod u+x \
 	/entrypoint.sh \
 	/setup.sh \
