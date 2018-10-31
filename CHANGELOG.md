@@ -2,6 +2,12 @@
 
 This changelog follows [Semantic Versioning](http://semver.org).
 
+## 0.4.3 - 2018-10-20
+
+### Fixed
+
+- Checksum error without need for huge library
+
 ## 0.4.2 - 2018-10-20
 
 ### Fixed
