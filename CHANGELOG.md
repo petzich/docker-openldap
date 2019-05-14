@@ -2,6 +2,12 @@
 
 This changelog follows [Semantic Versioning](http://semver.org).
 
+## 0.5.1 - 2019-05-14
+
+### Changed
+
+- Upgrade base image alpine:3.9.3 -> alpine:3.9.4
+
 ## 0.5.0 - 2019-04-24
 
 ### Changed
