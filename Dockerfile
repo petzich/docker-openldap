@@ -1,4 +1,4 @@
-FROM alpine:3.9.4
+FROM alpine:3.10.0
 
 EXPOSE 389
 VOLUME /var/lib/openldap
