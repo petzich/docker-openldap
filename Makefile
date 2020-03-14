@@ -30,13 +30,18 @@ shell:
 	$(COMPOSE) -f $(TEST) exec test /bin/sh
 	$(COMPOSE) -f $(TEST) down -v
 
+.PHONY: ci-checks
+ci-checks:
+	make shellcheck
+	make shfmt-check
+
 .PHONY: shellcheck
 shellcheck:
-	find bin/ -name "*.sh" -exec $(DOCKER) run --rm -v "${PWD}:/mnt" koalaman/shellcheck:stable {} +
+	find bin/ -name "*.sh" -exec $(DOCKER) run --rm -v "${PWD}:/mnt:ro" koalaman/shellcheck:stable {} +
 
 .PHONY: shfmt-check
 shfmt-check:
-	$(DOCKER) run --rm -v "${PWD}:/mnt" -w /mnt jamesmstone/shfmt -d bin/
+	$(DOCKER) run --rm -v "${PWD}:/mnt:ro" -w /mnt jamesmstone/shfmt -d bin/
 
 .PHONY: shfmt-format
 shfmt-format:

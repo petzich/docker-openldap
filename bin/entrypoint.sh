@@ -2,6 +2,7 @@
 
 # entrypoint.sh for petzi/openldap
 
+# shellcheck source=bin/_log.sh
 . ./_log.sh
 
 log "Starting"
