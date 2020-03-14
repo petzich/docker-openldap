@@ -13,6 +13,7 @@ build:
 clean:
 	$(COMPOSE) down -v
 	$(COMPOSE) -f $(TEST) down -v
+	- $(DOCKER) rmi `$(DOCKER) images | grep -E "petzi/openldap.*(latest|<none>)" | awk -F" " '{print $$3}'`
 
 .PHONY: test
 test:
