@@ -6,6 +6,8 @@ services:
     build: .
     environment:
       SLAPD_ROOTDN: "dc=example,dc=org"
-      SLAPD_ROOTPW: "password"
+      SLAPD_ROOTPW: "NotSoSimpleYetNotHard"
+      FIRST_USER: "myfirsttestuser"
+      FIRST_USER_PASSWORD: "myftu-password"
     ports:
       - "2389:389"

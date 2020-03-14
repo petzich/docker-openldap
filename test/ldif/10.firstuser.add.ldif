@@ -1,0 +1,14 @@
+version: 1
+
+dn: uid=${FIRST_USER},ou=users,${SLAPD_ROOTDN}
+objectclass: account
+objectclass: simpleSecurityObject
+uid: ${FIRST_USER}
+userPassword: ${FIRST_USER_PASSWORD}
+
+dn: cn=firstgroup,ou=groups,${SLAPD_ROOTDN}
+changetype: add
+objectClass: groupOfUniqueNames
+description: a testing group for petzi/openldap-test
+cn: firstgroup
+uniqueMember: uid=${FIRST_USER},ou=users,${SLAPD_ROOTDN}
