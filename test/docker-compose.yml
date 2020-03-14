@@ -2,7 +2,8 @@
 version: '2'
 services:
   test:
-    image: 'petzi/openldap'
+    image: 'petzi/openldap-test'
+    build: .
     environment:
       SLAPD_ROOTDN: "dc=example,dc=org"
       SLAPD_ROOTPW: "password"

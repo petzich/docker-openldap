@@ -2,8 +2,11 @@ COMPOSE=sudo docker-compose
 DOCKER=sudo docker
 TEST=test/docker-compose.yml
 
-.PHONY: default
-default: build test
+.PHONY: test
+test: build
+	$(COMPOSE) -f $(TEST) down -v
+	$(COMPOSE) -f $(TEST) run test slaptest
+	$(COMPOSE) -f $(TEST) down -v
 
 .PHONY: build
 build:
@@ -14,12 +17,6 @@ clean:
 	$(COMPOSE) down -v
 	$(COMPOSE) -f $(TEST) down -v
 	- $(DOCKER) rmi `$(DOCKER) images | grep -E "petzi/openldap.*(latest|<none>)" | awk -F" " '{print $$3}'`
-
-.PHONY: test
-test:
-	$(COMPOSE) -f $(TEST) down -v
-	$(COMPOSE) -f $(TEST) run test slaptest
-	$(COMPOSE) -f $(TEST) down -v
 
 .PHONY: run
 run:
