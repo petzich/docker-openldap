@@ -2,28 +2,31 @@ COMPOSE=sudo docker-compose
 DOCKER=sudo docker
 TEST=test/docker-compose.yml
 
-.PHONY: build clean default run shell test
-
+.PHONY: default
 default: build test
 
-build: Dockerfile conf.dist/*.ldif ldif.dist/*.ldif
+.PHONY: build
+build:
 	$(COMPOSE) build
 
+.PHONY: clean
 clean:
 	$(COMPOSE) down -v
 	$(COMPOSE) -f $(TEST) down -v
-	- $(DOCKER) rmi test_test
 
+.PHONY: test
 test:
 	$(COMPOSE) -f $(TEST) down -v
 	$(COMPOSE) -f $(TEST) run test slaptest
 	$(COMPOSE) -f $(TEST) down -v
 
+.PHONY: run
 run:
 	$(COMPOSE) -f $(TEST) down -v
 	$(COMPOSE) -f $(TEST) up
 	$(COMPOSE) -f $(TEST) down -v
 
+.PHONY: shell
 shell:
 	$(COMPOSE) -f $(TEST) down -v
 	$(COMPOSE) -f $(TEST) up -d
