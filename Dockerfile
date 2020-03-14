@@ -11,7 +11,7 @@ RUN apk add --no-cache \
 	openldap-overlay-all
 
 # Copy the entrypoint scripts
-COPY bin/*.sh /
+COPY dist/bin/*.sh /
 RUN chmod u+x \
 	/entrypoint.sh \
 	/setup.sh \
@@ -20,9 +20,9 @@ RUN chmod u+x \
 	/setup/ldif.dist \
 	/setup/slapd.ldif
 
-COPY conf.dist/* /setup/conf.dist/
-COPY ldif.dist/* /setup/ldif.dist/
-COPY slapd.ldif/* /setup/slapd.ldif/
+COPY dist/conf.dist/* /setup/conf.dist/
+COPY dist/ldif.dist/* /setup/ldif.dist/
+COPY dist/slapd.ldif/* /setup/slapd.ldif/
 
 ONBUILD COPY conf/ /setup/conf/
 ONBUILD COPY ldif/ /setup/ldif/

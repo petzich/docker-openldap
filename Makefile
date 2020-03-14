@@ -39,12 +39,12 @@ ci-checks:
 
 .PHONY: shellcheck
 shellcheck:
-	find bin/ test/ -name "*.sh" -exec $(DOCKER) run --rm -v "${PWD}:/mnt:ro" koalaman/shellcheck:stable {} +
+	find dist/ test/ -name "*.sh" -exec $(DOCKER) run --rm -v "${PWD}:/mnt:ro" koalaman/shellcheck:stable {} +
 
 .PHONY: shfmt-check
 shfmt-check:
-	$(DOCKER) run --rm -v "${PWD}:/mnt" -w /mnt jamesmstone/shfmt -d bin/ test/
+	$(DOCKER) run --rm -v "${PWD}:/mnt" -w /mnt jamesmstone/shfmt -d dist/ test/
 
 .PHONY: shfmt-format
 shfmt-format:
-	$(DOCKER) run --rm -v "${PWD}:/mnt" -w /mnt jamesmstone/shfmt -w bin/ test/
+	$(DOCKER) run --rm -v "${PWD}:/mnt" -w /mnt jamesmstone/shfmt -w dist/ test/

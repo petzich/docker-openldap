@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# shellcheck source=bin/_log.sh
+# shellcheck source=dist/bin/_log.sh
 . ./_log.sh
 
 # setup.sh script for post-installation schema and structure setup
