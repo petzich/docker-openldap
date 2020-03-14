@@ -5,7 +5,8 @@ TEST=test/docker-compose.yml
 .PHONY: test
 test: build
 	$(COMPOSE) -f $(TEST) down -v
-	$(COMPOSE) -f $(TEST) run test slaptest
+	$(COMPOSE) -f $(TEST) build test
+	$(COMPOSE) -f $(TEST) run test /test.sh
 	$(COMPOSE) -f $(TEST) down -v
 
 .PHONY: build
@@ -38,12 +39,12 @@ ci-checks:
 
 .PHONY: shellcheck
 shellcheck:
-	find bin/ -name "*.sh" -exec $(DOCKER) run --rm -v "${PWD}:/mnt:ro" koalaman/shellcheck:stable {} +
+	find bin/ test/ -name "*.sh" -exec $(DOCKER) run --rm -v "${PWD}:/mnt:ro" koalaman/shellcheck:stable {} +
 
 .PHONY: shfmt-check
 shfmt-check:
-	$(DOCKER) run --rm -v "${PWD}:/mnt:ro" -w /mnt jamesmstone/shfmt -d bin/
+	$(DOCKER) run --rm -v "${PWD}:/mnt" -w /mnt jamesmstone/shfmt -d bin/ test/
 
 .PHONY: shfmt-format
 shfmt-format:
-	$(DOCKER) run --rm -v "${PWD}:/mnt" -w /mnt jamesmstone/shfmt -w bin/
+	$(DOCKER) run --rm -v "${PWD}:/mnt" -w /mnt jamesmstone/shfmt -w bin/ test/
