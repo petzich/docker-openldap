@@ -37,6 +37,9 @@ cmd="slaptest"
 testReturnCode "slaptest configuration check" 0 "$cmd"
 
 cmd="ldapwhoami -h localhost -p 389 -D cn=manager,${SLAPD_ROOTDN} -w ${SLAPD_ROOTPW}"
-testReturnCode "ldapwhoami - bind with root user" 0 "$cmd"
+testReturnCode "ldapwhoami - root user" 0 "$cmd"
+
+cmd="ldapwhoami -h localhost -p 389 -D uid=${FIRST_USER},ou=users,${SLAPD_ROOTDN} -w ${FIRST_USER_PASSWORD}"
+testReturnCode "ldapwhoami - first user" 0 "$cmd"
 
 killall slapd

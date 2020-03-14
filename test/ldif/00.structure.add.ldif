@@ -1,0 +1,11 @@
+version: 1
+
+dn: ou=users,${SLAPD_ROOTDN}
+objectclass: top
+objectclass: organizationalUnit
+ou: users
+
+dn: ou=groups,${SLAPD_ROOTDN}
+objectClass: top
+objectClass: organizationalUnit
+ou: groups
