@@ -2,6 +2,12 @@
 
 This changelog follows [Semantic Versioning](http://semver.org).
 
+## 0.5.2 - 2020-03-14
+
+### Changed
+
+- Upgrade base image alpine:3.9.4 -> 3.11.3
+
 ## 0.5.1 - 2019-05-14
 
 ### Changed
