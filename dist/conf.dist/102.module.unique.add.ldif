@@ -1,4 +1,5 @@
 dn: cn=module,cn=config
+changetype: add
 objectclass: olcModuleList
 cn: module
 olcModuleLoad: unique.so
