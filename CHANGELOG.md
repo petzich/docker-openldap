@@ -2,9 +2,9 @@
 
 This changelog follows [Semantic Versioning](http://semver.org).
 
-## Unreleased
+## 0.6.0 - 2020-03-yy
 
-### Incompatible changes
+### Breaking Changes
 
 - The directories for the ldif files have been renamed (see README.md)
 - The ldif files are only processed by ldapmodify (see README.md)
@@ -14,6 +14,8 @@ This changelog follows [Semantic Versioning](http://semver.org).
 - Renamed setup.sh to ldif.sh
 
 ### Added
+
+- Many test cases added
 
 ## 0.5.2 - 2020-03-14
 
