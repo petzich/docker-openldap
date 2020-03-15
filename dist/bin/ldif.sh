@@ -69,8 +69,8 @@ rootdn_mod() {
 	fi
 }
 
-if [ "$1" = "replace_env_in_ldif" ]; then
-	log "Replacing variables in all files"
+if [ "$1" = "replace_env" ]; then
+	log "Replacing variables in all ldif files"
 	replace_env_in_all_ldif
 elif [ "$1" = "conf" ]; then
 	find_ldif_files
@@ -94,6 +94,6 @@ elif [ "$1" = "ldif" ]; then
 	done
 else
 
-	log "No parameter passed to $0. You should pass either 'replace_env_in_ldif', 'conf' or 'ldif'."
+	log "No parameter passed to $0. You should pass either 'replace_env', 'conf' or 'ldif'."
 
 fi

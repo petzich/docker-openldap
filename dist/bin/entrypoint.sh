@@ -43,7 +43,7 @@ if [ ! -d /etc/openldap/slapd.d ]; then
 		echo "" >>"$generated_file"
 	done
 	cat /setup/slapd.dist/post-include.ldif >>"$generated_file"
-	./ldif.sh replace_env_in_ldif
+	./ldif.sh replace_env
 
 	log "Generating configuration"
 	/usr/sbin/slapadd -n 0 -F /etc/openldap/slapd.d -l "$generated_file"
