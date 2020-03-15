@@ -11,43 +11,36 @@ SLAPD_DOMAIN_PART=$(echo "${SLAPD_ROOTDN}" | awk -F"=|," -e '{print $2}')
 export SLAPD_DOMAIN_PART
 log "\$SLAPD_DOMAIN_PART: $SLAPD_DOMAIN_PART"
 
-find_files() {
+find_ldif_files() {
 	all_files=$(find /setup -name "*.ldif" | sort)
 	add_files=$(echo "${all_files}" | grep "add.ldif")
 	mod_files=$(echo "${all_files}" | grep "mod.ldif")
-	conf_files=$(echo "${all_files}" | grep "/setup/conf")
-	ldif_files=$(echo "${all_files}" | grep "/setup/ldif")
 	conf_add_files=$(echo "${add_files}" | grep "/setup/conf")
 	conf_mod_files=$(echo "${mod_files}" | grep "/setup/conf")
 	ldif_add_files=$(echo "${add_files}" | grep "/setup/ldif")
 	ldif_mod_files=$(echo "${mod_files}" | grep "/setup/ldif")
 }
 
-replace_env_in_file() {
+replace_env_in_ldif() {
 	f=${1}
 	cp "$f" "$f.bak"
 	log "Replacing envs in $f"
 	envsubst <"$f.bak" >"$f"
 }
 
-replace_conf() {
-	find_files
-	for f in $conf_files; do
-		replace_env_in_file "$f"
+replace_env_in_all_ldif() {
+	find_ldif_files
+	for f in $all_files; do
+		replace_env_in_ldif "$f"
 	done
 }
 
-replace_ldif() {
-	find_files
-	for f in $ldif_files; do
-		replace_env_in_file "$f"
-	done
-}
+log "Replacing variables in all files"
+replace_env_in_all_ldif
 
 log "Applying ldif files to directory"
 
 if [ "$1" = "conf" ]; then
-	replace_conf
 	# Process conf add files
 	for file in ${conf_add_files}; do
 		if [ -f "$file" ]; then
@@ -67,7 +60,6 @@ if [ "$1" = "conf" ]; then
 	done
 
 elif [ "$1" = "ldif" ]; then
-	replace_ldif
 	# Process ldif add files
 	for file in ${ldif_add_files}; do
 		if [ -f "$file" ]; then
