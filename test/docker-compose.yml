@@ -5,7 +5,7 @@ services:
     image: 'petzi/openldap-test'
     build: .
     environment:
-      SLAPD_ROOTDN: "dc=example,dc=org"
+      SLAPD_ROOTDN: "dc=example_xyz,dc=org"
       SLAPD_ROOTPW: "NotSoSimpleYetNotHard"
       FIRST_USER: "myfirsttestuser"
       FIRST_USER_PASSWORD: "myftu-password"
