@@ -53,10 +53,27 @@ testStringCompare() {
 	fi
 }
 
-# Most tests require the daemon to be running.
-# Wait for 1 second for the daemon to start.
-/usr/sbin/slapd -u ldap -g ldap -F /etc/openldap/slapd.d -d 256 &
-sleep 1
+# Query LDAP server until ready
+WAIT_MAX=10
+WAIT_STEP=2
+waitInit() {
+	ldapwhoami -h localhost -p 389 -D "cn=manager,${SLAPD_ROOTDN}" -w "${SLAPD_ROOTPW}"
+	rc="$?"
+	count="$WAIT_MAX"
+	while [ "$rc" -ne 0 ] && [ "$count" -ne 0 ]; do
+		ldapwhoami -h localhost -p 389 -D "cn=manager,${SLAPD_ROOTDN}" -w "${SLAPD_ROOTPW}"
+		rc="$?"
+		count=$((count - WAIT_STEP))
+		echo "rc: $rc, count: $count"
+		sleep "$WAIT_STEP"
+	done
+	if [ "$rc" -ne 0 ]; then
+		echo "Server was not ready within $WAIT_MAX seconds. Not running tests"
+		exit 1
+	fi
+}
+
+waitInit
 
 cmd="slaptest"
 testReturnCode "slaptest configuration check" 0 "$cmd"
@@ -96,5 +113,3 @@ while [ "$i" -ne 0 ]; do
 done
 cmd="ldapwhoami -h localhost -p 389 -D uid=${FIRST_USER},ou=users,${SLAPD_ROOTDN} -w ${FIRST_USER_PASSWORD}"
 testReturnCode "ldapwhoami - 6 logons" 49 "$cmd"
-
-killall slapd

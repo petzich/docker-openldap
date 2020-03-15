@@ -6,7 +6,10 @@ TEST=test/docker-compose.yml
 test: build
 	$(COMPOSE) -f $(TEST) down -v
 	$(COMPOSE) -f $(TEST) build test
-	$(COMPOSE) -f $(TEST) run test /test.sh
+	$(COMPOSE) -f $(TEST) up -d
+	$(COMPOSE) -f $(TEST) exec test /test.sh
+	$(COMPOSE) -f $(TEST) restart test
+	$(COMPOSE) -f $(TEST) exec test /test.sh
 	$(COMPOSE) -f $(TEST) down -v
 
 .PHONY: build
