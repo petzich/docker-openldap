@@ -4,12 +4,7 @@
 . ./_log.sh
 
 # ldif.sh script for post-installation schema and structure setup
-log "Starting with parameter: $1"
-
-# First fill some variables
-SLAPD_DOMAIN_PART=$(echo "${SLAPD_ROOTDN}" | awk -F"=|," -e '{print $2}')
-export SLAPD_DOMAIN_PART
-log "\$SLAPD_DOMAIN_PART: $SLAPD_DOMAIN_PART"
+log "Called with parameters: $*"
 
 find_ldif_files() {
 	all_files=$(find /setup -name "*.ldif" | sort)
@@ -24,7 +19,6 @@ find_ldif_files() {
 replace_env_in_ldif() {
 	f=${1}
 	cp "$f" "$f.bak"
-	log "Replacing envs in $f"
 	envsubst <"$f.bak" >"$f"
 }
 
@@ -38,7 +32,6 @@ replace_env_in_all_ldif() {
 conf_add() {
 	file="$1"
 	if [ -f "$file" ]; then
-		log "$file"
 		ldapadd -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f "$file"
 	else
 		log "$file is not a file. not processing"
@@ -48,24 +41,27 @@ conf_add() {
 conf_mod() {
 	file="$1"
 	if [ -f "$file" ]; then
-		log "$file"
 		ldapmodify -Q -Y EXTERNAL -H ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi -f "$file"
+	else
+		log "$file is not a file. not processing"
 	fi
 }
 
 rootdn_add() {
 	file="$1"
 	if [ -f "$file" ]; then
-		log "$file"
 		ldapadd -x -D "cn=manager,${SLAPD_ROOTDN}" -w "${SLAPD_ROOTPW}" -f "$file"
+	else
+		log "$file is not a file. not processing"
 	fi
 }
 
 rootdn_mod() {
 	file="$1"
 	if [ -f "$file" ]; then
-		log "$file"
 		ldapmodify -x -D "cn=manager,${SLAPD_ROOTDN}" -w "${SLAPD_ROOTPW}" -f "$file"
+	else
+		log "$file is not a file. not processing"
 	fi
 }
 

@@ -8,6 +8,7 @@
 log "Starting"
 
 check_env() {
+	log "Checking environment variables"
 	if [ -z "$SLAPD_ROOTDN" ]; then
 		log_fatal "SLAPD_ROOTDN not set. " >&2
 		exit 1
@@ -16,15 +17,16 @@ check_env() {
 		log_fatal "SLAPD_ROOTPW not set. " >&2
 		exit 1
 	fi
+	SLAPD_DOMAIN_PART=$(echo "${SLAPD_ROOTDN}" | awk -F"=|," -e '{print $2}')
+	export SLAPD_DOMAIN_PART
+	log "Calculated SLAPD_DOMAIN_PART: $SLAPD_DOMAIN_PART"
 }
 
 create_dirs() {
-	log "Creating slapd.d"
+	log "Creating files and directories"
 	mkdir /etc/openldap/slapd.d
-	log "Creating slapi socket"
 	mkdir /var/run/openldap
 	touch /var/run/openldap/slapi
-	log "Creating openldap data directory"
 	mkdir /var/lib/openldap/openldap-data
 }
 
@@ -56,6 +58,7 @@ apply_slapd_ldif() {
 }
 
 apply_conf() {
+	log "Applying cn=config ldif files"
 	# As the standard configuration generates a "no-one allowed" rule
 	# on (olcDatabase=config,cn=config) we need to hard-overwrite
 	# this value to allow the local root user SASL-access to cn=config.
@@ -72,11 +75,11 @@ apply_conf() {
 	sleep 1
 
 	# Reset old olcAccess on config file
-	log "Writing back original olcAccess rule: $old_olc_access"
 	sed -i "s/^olcAccess.*$/$old_olc_access/g" $config_db_file
 }
 
 apply_rootdn() {
+	log "Applying rootdn ldif files"
 	chown -R ldap:ldap /etc/openldap/slapd.d/
 	exec /usr/sbin/slapd -u ldap -g ldap -F /etc/openldap/slapd.d &
 	sleep 1
@@ -87,7 +90,6 @@ apply_rootdn() {
 
 phase_init() {
 	log "Starting phase [init]"
-	check_env
 	create_dirs
 	set_permission
 	generate_slapd_ldif
@@ -103,10 +105,10 @@ phase_always() {
 	log "Leaving phase [always]"
 }
 
+check_env
 if [ ! -d /etc/openldap/slapd.d ]; then
 	phase_init
 fi
-
 phase_always
 
 log "Starting slapd."
