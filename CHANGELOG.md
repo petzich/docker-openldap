@@ -7,6 +7,7 @@ This changelog follows [Semantic Versioning](http://semver.org).
 ### Incompatible changes
 
 - The directories for the ldif files have been renamed (see README.md)
+- The ldif files are only processed by ldapmodify (see README.md)
 
 ### Changed
 
