@@ -3,14 +3,17 @@ DOCKER=sudo docker
 TEST=test/docker-compose.yml
 
 .PHONY: test
-test: build
+test: build-test
 	$(COMPOSE) -f $(TEST) down -v
-	$(COMPOSE) -f $(TEST) build test
 	$(COMPOSE) -f $(TEST) up -d
 	$(COMPOSE) -f $(TEST) exec test /test.sh
 	$(COMPOSE) -f $(TEST) restart test
 	$(COMPOSE) -f $(TEST) exec test /test.sh
 	$(COMPOSE) -f $(TEST) down -v
+
+.PHONY: build-test
+build-test: build
+	$(COMPOSE) -f $(TEST) build test
 
 .PHONY: build
 build:
@@ -29,7 +32,7 @@ run:
 	$(COMPOSE) -f $(TEST) down -v
 
 .PHONY: test-shell
-test-shell: build
+test-shell: build-test
 	$(COMPOSE) -f $(TEST) down -v
 	$(COMPOSE) -f $(TEST) run --rm test /bin/sh
 	$(COMPOSE) -f $(TEST) down -v
