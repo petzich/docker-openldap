@@ -17,8 +17,8 @@ find_ldif_files() {
 	mod_files=$(echo "${all_files}" | grep "mod.ldif")
 	conf_add_files=$(echo "${add_files}" | grep "/setup/conf")
 	conf_mod_files=$(echo "${mod_files}" | grep "/setup/conf")
-	ldif_add_files=$(echo "${add_files}" | grep "/setup/ldif")
-	ldif_mod_files=$(echo "${mod_files}" | grep "/setup/ldif")
+	rootdn_add_files=$(echo "${add_files}" | grep "/setup/rootdn")
+	rootdn_mod_files=$(echo "${mod_files}" | grep "/setup/rootdn")
 }
 
 replace_env_in_ldif() {
@@ -84,12 +84,12 @@ elif [ "$1" = "conf" ]; then
 	done
 elif [ "$1" = "ldif" ]; then
 	find_ldif_files
-	log "Processing ldif_add_files"
-	for file in ${ldif_add_files}; do
+	log "Processing rootdn_add_files"
+	for file in ${rootdn_add_files}; do
 		rootdn_add "$file"
 	done
-	log "Processing ldif_mod_files"
-	for file in ${ldif_mod_files}; do
+	log "Processing rootdn_mod_files"
+	for file in ${rootdn_mod_files}; do
 		rootdn_mod "$file"
 	done
 else
