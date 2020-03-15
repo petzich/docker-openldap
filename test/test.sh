@@ -75,4 +75,8 @@ cmd="ldapsearch -D uid=$FIRST_USER,ou=users,${SLAPD_ROOTDN} -w $FIRST_USER_PASSW
 grepfor="dn:"
 testStringCompare "ldapsearch dn" "dn: uid=$FIRST_USER,ou=users,$SLAPD_ROOTDN" "$cmd" "$grepfor"
 
+cmd="ldapsearch -D uid=$FIRST_USER,ou=users,${SLAPD_ROOTDN} -w $FIRST_USER_PASSWORD -b $SLAPD_ROOTDN -LL (uid=$FIRST_USER) memberOf"
+grepfor="memberOf:"
+testStringCompare "ldapsearch memberof" "memberOf: cn=firstgroup,ou=groups,$SLAPD_ROOTDN" "$cmd" "$grepfor"
+
 killall slapd
