@@ -79,4 +79,22 @@ cmd="ldapsearch -D uid=$FIRST_USER,ou=users,${SLAPD_ROOTDN} -w $FIRST_USER_PASSW
 grepfor="memberOf:"
 testStringCompare "ldapsearch memberof" "memberOf: cn=firstgroup,ou=groups,$SLAPD_ROOTDN" "$cmd" "$grepfor"
 
+# Test user is not locked out after 4 wrong passwords
+i=4
+while [ "$i" -ne 0 ]; do
+	ldapwhoami -h localhost -p 389 -D "uid=${FIRST_USER},ou=users,${SLAPD_ROOTDN}" -w "${FIRST_USER_PASSWORD}wrong"
+	i=$((i - 1))
+done
+cmd="ldapwhoami -h localhost -p 389 -D uid=${FIRST_USER},ou=users,${SLAPD_ROOTDN} -w ${FIRST_USER_PASSWORD}"
+testReturnCode "ldapwhoami - 5 logons" 0 "$cmd"
+
+# Test user is locked out after 5 wrong passwords
+i=5
+while [ "$i" -ne 0 ]; do
+	ldapwhoami -h localhost -p 389 -D "uid=${FIRST_USER},ou=users,${SLAPD_ROOTDN}" -w "${FIRST_USER_PASSWORD}wrong"
+	i=$((i - 1))
+done
+cmd="ldapwhoami -h localhost -p 389 -D uid=${FIRST_USER},ou=users,${SLAPD_ROOTDN} -w ${FIRST_USER_PASSWORD}"
+testReturnCode "ldapwhoami - 6 logons" 49 "$cmd"
+
 killall slapd
