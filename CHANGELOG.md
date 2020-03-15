@@ -2,6 +2,18 @@
 
 This changelog follows [Semantic Versioning](http://semver.org).
 
+## Unreleased
+
+### Incompatible changes
+
+- The directories for the ldif files have been renamed (see README.md)
+
+### Changed
+
+- Renamed setup.sh to ldif.sh
+
+### Added
+
 ## 0.5.2 - 2020-03-14
 
 ### Changed

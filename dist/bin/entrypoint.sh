@@ -36,14 +36,14 @@ if [ ! -d /etc/openldap/slapd.d ]; then
 	export config_rootpw_hash
 
 	# Assemble the slapd.ldif file
-	generated_file="/etc/openldap/slapd.ldif.generated"
-	cp /setup/slapd.ldif/pre-include.ldif "$generated_file.orig"
+	generated_file="/setup/slapd.dist/slapd.generated.ldif"
+	cp /setup/slapd.dist/pre-include.ldif "$generated_file"
 	for i in $include_files; do
-		echo "include: file:///etc/openldap/schema/$i" >>"$generated_file.orig"
-		echo "" >>"$generated_file.orig"
+		echo "include: file:///etc/openldap/schema/$i" >>"$generated_file"
+		echo "" >>"$generated_file"
 	done
-	cat /setup/slapd.ldif/post-include.ldif >>"$generated_file.orig"
-	envsubst <"$generated_file.orig" >"$generated_file"
+	cat /setup/slapd.dist/post-include.ldif >>"$generated_file"
+	./ldif.sh replace_env
 
 	log "Generating configuration"
 	/usr/sbin/slapadd -n 0 -F /etc/openldap/slapd.d -l "$generated_file"
@@ -59,14 +59,14 @@ if [ ! -d /etc/openldap/slapd.d ]; then
 	chown -R ldap:ldap /etc/openldap/slapd.d/
 	exec /usr/sbin/slapd -u ldap -g ldap -F /etc/openldap/slapd.d -h ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi &
 	sleep 1
-	./setup.sh conf
+	./ldif.sh conf
 	killall slapd
 	sleep 1
 
 	chown -R ldap:ldap /etc/openldap/slapd.d/
 	exec /usr/sbin/slapd -u ldap -g ldap -F /etc/openldap/slapd.d &
 	sleep 1
-	./setup.sh ldif
+	./ldif.sh ldif
 	killall slapd
 	sleep 1
 
