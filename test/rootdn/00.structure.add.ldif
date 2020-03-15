@@ -1,11 +1,13 @@
 version: 1
 
 dn: ou=users,${SLAPD_ROOTDN}
+changetype: add
 objectclass: top
 objectclass: organizationalUnit
 ou: users
 
 dn: ou=groups,${SLAPD_ROOTDN}
+changetype: add
 objectClass: top
 objectClass: organizationalUnit
 ou: groups

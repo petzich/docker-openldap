@@ -1,4 +1,5 @@
 dn: cn=default,ou=ppolicy,${SLAPD_ROOTDN}
+changetype: add
 objectClass: applicationProcess
 objectClass: pwdPolicy
 cn: default

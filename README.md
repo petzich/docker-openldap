@@ -26,7 +26,7 @@ You can then connect using the bind DN `cn=manager,dc=example,dc=org`.
 This image is intended to be used by extending with your own docker image. Use a `Dockerfile` and provide two directories with your configuration as LDIF files:
 
 * `conf/`
-* `ldif/`
+* `rootdn/`
 
 ### Volume
 A volume is provided for the ldap database. You should create a volume container if you want data to persist across restarts.
@@ -47,25 +47,34 @@ The `entrypoint.sh` script provided only does some bootstrapping. `ldif.sh` is t
 The `conf` directory should contain ldif files operating on the `cn=config` tree.
 The `rootdn` directory should contain ldif files operating on your `SLAPD_ROOTDN` tree.
 
-### File names
-The file extension in all directories has a meaning:
+All LDIF files are processed by ldapmodify, so all entries should contain a changetype, even add. Example:
 
-* `*.add.ldif` - use `ldapadd` to process the file
-* `*.mod.ldif` - use `ldapmodify` to process the file
+```
+dn: ou=users,dc=example,dc=org
+changetype: add
+objectClass: organizationalUnit
+...
+```
 
 ### Variables
-The ldif files can contain variables, they should be surrounded by environment variable quoting, example: `${MYAPP_VAR1}`
-In order for `ldif.sh` to replace the variable, you should provide the following environment variables when starting the container:
 
-* `MYAPP_VAR1="my value of var1"`
+The LDIF files may contain variables, they should be surrounded by environment variable quoting, example: `${MYAPP_VAR1}`. In order for `ldif.sh` to replace the variable, you should provide the following environment variables to the container. You might get weird errors otherwise. You can rewrite the example for above like so:
+
+```
+dn: ou=users,${SLAPD_ROOTDN}
+changetype: add
+objectClass: organizationalUnit
+...
+```
 
 Contributing
 ------------
 
-You can use any editor to do developping or bugfixing. The following sequence of Makefile targets will give you a good impression if your changes work:
+You can use any editor to do developping or bugfixing. The default Makefile target builds the docker images and runs the tests, so just run `make`. There is also a target `test-shell` which will drop you into a shell in the test image.
 
 ```
-make clean build test
+make
+make test-shell
 ```
 
 To run a test server, issue the command `docker-compose run`. This will run an ldap server with an empty rootdn. To connect from your host using an LDAP browser, use the following information:

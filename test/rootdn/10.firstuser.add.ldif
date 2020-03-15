@@ -1,6 +1,7 @@
 version: 1
 
 dn: uid=${FIRST_USER},ou=users,${SLAPD_ROOTDN}
+changetype: add
 objectclass: account
 objectclass: simpleSecurityObject
 uid: ${FIRST_USER}

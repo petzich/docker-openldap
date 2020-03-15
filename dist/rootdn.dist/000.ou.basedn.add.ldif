@@ -1,4 +1,5 @@
 dn: ${SLAPD_ROOTDN}
+changetype: add
 objectclass: dcObject
 objectclass: organization
 o: ${SLAPD_ROOTDN}

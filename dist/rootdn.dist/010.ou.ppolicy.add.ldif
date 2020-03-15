@@ -1,3 +1,4 @@
 dn: ou=ppolicy,${SLAPD_ROOTDN}
+changetype: add
 objectclass: organizationalUnit
 ou: ppolicy
