@@ -43,7 +43,7 @@ if [ ! -d /etc/openldap/slapd.d ]; then
 		echo "" >>"$generated_file"
 	done
 	cat /setup/slapd.dist/post-include.ldif >>"$generated_file"
-	./setup.sh replace_env_in_ldif
+	./ldif.sh replace_env_in_ldif
 
 	log "Generating configuration"
 	/usr/sbin/slapadd -n 0 -F /etc/openldap/slapd.d -l "$generated_file"
@@ -59,14 +59,14 @@ if [ ! -d /etc/openldap/slapd.d ]; then
 	chown -R ldap:ldap /etc/openldap/slapd.d/
 	exec /usr/sbin/slapd -u ldap -g ldap -F /etc/openldap/slapd.d -h ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi &
 	sleep 1
-	./setup.sh conf
+	./ldif.sh conf
 	killall slapd
 	sleep 1
 
 	chown -R ldap:ldap /etc/openldap/slapd.d/
 	exec /usr/sbin/slapd -u ldap -g ldap -F /etc/openldap/slapd.d &
 	sleep 1
-	./setup.sh ldif
+	./ldif.sh ldif
 	killall slapd
 	sleep 1
 

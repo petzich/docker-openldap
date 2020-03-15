@@ -36,7 +36,7 @@ A volume is provided for the ldap database. You should create a volume container
 Setup script
 ------------
 
-The `entrypoint.sh` script provided only does some bootstrapping. `setup.sh` is the script doing the hard lifting. The script reads ldif files from the following four directories:
+The `entrypoint.sh` script provided only does some bootstrapping. `ldif.sh` is the script doing the hard lifting. The script reads ldif files from the following four directories:
 
 ### Directory structure
 * `/setup/conf.dist/` - provided by this image
@@ -55,7 +55,7 @@ The file extension in all directories has a meaning:
 
 ### Variables
 The ldif files can contain variables, they should be surrounded by environment variable quoting, example: `${MYAPP_VAR1}`
-In order for `setup.sh` to replace the variable, you should provide the following environment variables when starting the container:
+In order for `ldif.sh` to replace the variable, you should provide the following environment variables when starting the container:
 
 * `MYAPP_VAR1="my value of var1"`
 

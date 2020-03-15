@@ -14,7 +14,7 @@ RUN apk add --no-cache \
 COPY dist/bin/*.sh /
 RUN chmod u+x \
 	/entrypoint.sh \
-	/setup.sh \
+	/ldif.sh \
 	&& mkdir -p \
 	/setup/conf.dist \
 	/setup/ldif.dist \

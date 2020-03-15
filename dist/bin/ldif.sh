@@ -3,7 +3,7 @@
 # shellcheck source=dist/bin/_log.sh
 . ./_log.sh
 
-# setup.sh script for post-installation schema and structure setup
+# ldif.sh script for post-installation schema and structure setup
 log "Starting with parameter: $1"
 
 # First fill some variables
