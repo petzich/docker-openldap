@@ -4,23 +4,10 @@
 
 # shellcheck source=dist/bin/_log.sh
 . ./_log.sh
+# shellcheck source=dist/bin/_lib.sh
+. ./_lib.sh
 
 log "Starting"
-
-check_env() {
-	log "Checking environment variables"
-	if [ -z "$SLAPD_ROOTDN" ]; then
-		log_fatal "SLAPD_ROOTDN not set. " >&2
-		exit 1
-	fi
-	if [ -z "$SLAPD_ROOTPW" ]; then
-		log_fatal "SLAPD_ROOTPW not set. " >&2
-		exit 1
-	fi
-	SLAPD_DOMAIN_PART=$(echo "${SLAPD_ROOTDN}" | awk -F"=|," -e '{print $2}')
-	export SLAPD_DOMAIN_PART
-	log "Calculated SLAPD_DOMAIN_PART: $SLAPD_DOMAIN_PART"
-}
 
 create_dirs() {
 	log "Creating files and directories"
@@ -69,7 +56,7 @@ apply_conf() {
 
 	chown -R ldap:ldap /etc/openldap/slapd.d/
 	exec /usr/sbin/slapd -u ldap -g ldap -F /etc/openldap/slapd.d -h ldapi://%2Fvar%2Frun%2Fopenldap%2Fldapi &
-	sleep 1
+	waitInit 10 1 "sasl"
 	./ldif.sh conf
 	killall slapd
 	sleep 1
@@ -82,7 +69,7 @@ apply_rootdn() {
 	log "Applying rootdn ldif files"
 	chown -R ldap:ldap /etc/openldap/slapd.d/
 	exec /usr/sbin/slapd -u ldap -g ldap -F /etc/openldap/slapd.d &
-	sleep 1
+	waitInit 10 1
 	./ldif.sh ldif
 	killall slapd
 	sleep 1
