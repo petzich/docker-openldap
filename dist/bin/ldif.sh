@@ -8,8 +8,8 @@ log "Called with parameters: $*"
 
 find_ldif_files() {
 	all_files=$(find /setup -name "*.ldif" | sort)
-	conf_files=$(echo "${all_files}" | grep "/setup/conf")
-	rootdn_files=$(echo "${all_files}" | grep "/setup/rootdn")
+	init_conf_files=$(echo "${all_files}" | grep "/setup/init/conf")
+	init_rootdn_files=$(echo "${all_files}" | grep "/setup/init/rootdn")
 }
 
 replace_env_in_ldif() {
@@ -50,14 +50,14 @@ if [ "$1" = "replace_env" ]; then
 	replace_env_in_all_ldif
 elif [ "$1" = "conf" ]; then
 	find_ldif_files
-	log "Processing conf_files"
-	for file in ${conf_files}; do
+	log "Processing init_conf_files"
+	for file in ${init_conf_files}; do
 		conf_mod "$file"
 	done
 elif [ "$1" = "ldif" ]; then
 	find_ldif_files
-	log "Processing rootdn_files"
-	for file in ${rootdn_files}; do
+	log "Processing init_rootdn_files"
+	for file in ${init_rootdn_files}; do
 		rootdn_mod "$file"
 	done
 else

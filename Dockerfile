@@ -16,16 +16,16 @@ RUN chmod u+x \
 	/entrypoint.sh \
 	/ldif.sh \
 	&& mkdir -p \
-	/setup/conf.dist \
-	/setup/rootdn.dist \
-	/setup/slapd.dist
+	/setup/init/conf.dist \
+	/setup/init/rootdn.dist \
+	/setup/init/slapd.dist
 
-COPY dist/conf.dist/* /setup/conf.dist/
-COPY dist/rootdn.dist/* /setup/rootdn.dist/
-COPY dist/slapd.dist/* /setup/slapd.dist/
+COPY dist/init/conf.dist/* /setup/init/conf.dist/
+COPY dist/init/rootdn.dist/* /setup/init/rootdn.dist/
+COPY dist/init/slapd.dist/* /setup/init/slapd.dist/
 
-ONBUILD COPY conf/ /setup/conf/
-ONBUILD COPY rootdn/ /setup/rootdn/
+ONBUILD COPY init/conf/ /setup/init/conf.user/
+ONBUILD COPY init/rootdn/ /setup/init/rootdn.user/
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD [ "/usr/sbin/slapd", "-u", "ldap", "-g", "ldap", "-F", "/etc/openldap/slapd.d", "-d", "256"]

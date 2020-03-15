@@ -38,17 +38,17 @@ set_permission() {
 }
 
 generate_slapd_ldif() {
-	generated_file="/setup/slapd.dist/slapd.generated.ldif"
+	generated_file="/setup/init/slapd.dist/slapd.generated.ldif"
 	include_files="core.ldif dyngroup.ldif cosine.ldif inetorgperson.ldif openldap.ldif corba.ldif pmi.ldif ppolicy.ldif misc.ldif nis.ldif"
 	log "Generating $generated_file"
 	config_rootpw_hash=$(slappasswd -s "${SLAPD_ROOTPW}")
 	export config_rootpw_hash
-	cp /setup/slapd.dist/pre-include.ldif "$generated_file"
+	cp /setup/init/slapd.dist/pre-include.ldif "$generated_file"
 	for i in $include_files; do
 		echo "include: file:///etc/openldap/schema/$i" >>"$generated_file"
 		echo "" >>"$generated_file"
 	done
-	cat /setup/slapd.dist/post-include.ldif >>"$generated_file"
+	cat /setup/init/slapd.dist/post-include.ldif >>"$generated_file"
 	./ldif.sh replace_env
 }
 

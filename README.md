@@ -25,8 +25,11 @@ You can then connect using the bind DN `cn=manager,dc=example,dc=org`.
 ### Extending
 This image is intended to be used by extending with your own docker image. Use a `Dockerfile` and provide two directories with your configuration as LDIF files:
 
-* `conf/`
-* `rootdn/`
+* `init/conf/`
+* `init/rootdn/`
+
+The `init/conf` directory should contain ldif files operating on the `cn=config` tree in the initialization phase.
+The `init/rootdn` directory should contain ldif files operating on your `SLAPD_ROOTDN` tree in the initialization phase.
 
 ### Volume
 A volume is provided for the ldap database. You should create a volume container if you want data to persist across restarts.
@@ -39,13 +42,10 @@ Setup script
 The `entrypoint.sh` script provided only does some bootstrapping. `ldif.sh` is the script doing the hard lifting. The script reads ldif files from the following directories:
 
 ### Directory structure
-* `/setup/conf.dist/` - provided by this image
-* `/setup/conf/` - user-provided
-* `/setup/rootdn.dist/` - provided by this image
-* `/setup/rootdn/` - user-provided
-
-The `conf` directory should contain ldif files operating on the `cn=config` tree.
-The `rootdn` directory should contain ldif files operating on your `SLAPD_ROOTDN` tree.
+* `/setup/init/conf.dist/` - provided by this image
+* `/setup/init/conf.user/` - user-provided
+* `/setup/init/rootdn.dist/` - provided by this image
+* `/setup/init/rootdn.user/` - user-provided
 
 All LDIF files are processed by ldapmodify, so all entries should contain a changetype, even add. Example:
 
