@@ -18,8 +18,10 @@ find_ldif_files() {
 
 replace_env_in_ldif() {
 	f=${1}
-	cp "$f" "$f.bak"
-	envsubst <"$f.bak" >"$f"
+	if [ ! -e "$f.orig" ]; then
+		cp "$f" "$f.orig"
+	fi
+	envsubst <"$f.orig" >"$f"
 }
 
 replace_env_in_all_ldif() {
