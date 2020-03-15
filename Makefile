@@ -28,11 +28,10 @@ run:
 	$(COMPOSE) -f $(TEST) up
 	$(COMPOSE) -f $(TEST) down -v
 
-.PHONY: shell
-shell:
+.PHONY: test-shell
+test-shell: build
 	$(COMPOSE) -f $(TEST) down -v
-	$(COMPOSE) -f $(TEST) up -d
-	$(COMPOSE) -f $(TEST) exec test /bin/sh
+	$(COMPOSE) -f $(TEST) run --rm test /bin/sh
 	$(COMPOSE) -f $(TEST) down -v
 
 .PHONY: ci-checks

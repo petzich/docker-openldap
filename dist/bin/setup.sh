@@ -35,13 +35,12 @@ replace_env_in_all_ldif() {
 	done
 }
 
-log "Replacing variables in all files"
-replace_env_in_all_ldif
-
-log "Applying ldif files to directory"
-
-if [ "$1" = "conf" ]; then
-	# Process conf add files
+if [ "$1" = "replace_env_in_ldif" ]; then
+	log "Replacing variables in all files"
+	replace_env_in_all_ldif
+elif [ "$1" = "conf" ]; then
+	find_ldif_files
+	log "Processing conf_add_files"
 	for file in ${conf_add_files}; do
 		if [ -f "$file" ]; then
 			log "$file"
@@ -51,7 +50,7 @@ if [ "$1" = "conf" ]; then
 		fi
 	done
 
-	# Process conf mod files
+	log "Processing conf_mod_files"
 	for file in ${conf_mod_files}; do
 		if [ -f "$file" ]; then
 			log "$file"
@@ -60,7 +59,8 @@ if [ "$1" = "conf" ]; then
 	done
 
 elif [ "$1" = "ldif" ]; then
-	# Process ldif add files
+	find_ldif_files
+	log "Processing ldif_add_files"
 	for file in ${ldif_add_files}; do
 		if [ -f "$file" ]; then
 			log "$file"
@@ -68,7 +68,7 @@ elif [ "$1" = "ldif" ]; then
 		fi
 	done
 
-	# Process ldif mod files
+	log "Processing ldif_mod_files"
 	for file in ${ldif_mod_files}; do
 		if [ -f "$file" ]; then
 			log "$file"
@@ -78,6 +78,6 @@ elif [ "$1" = "ldif" ]; then
 
 else
 
-	log "No parameter passed to $0. You should pass either 'conf' or 'ldif'."
+	log "No parameter passed to $0. You should pass either 'replace_env_in_ldif', 'conf' or 'ldif'."
 
 fi

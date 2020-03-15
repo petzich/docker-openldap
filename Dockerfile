@@ -18,11 +18,11 @@ RUN chmod u+x \
 	&& mkdir -p \
 	/setup/conf.dist \
 	/setup/ldif.dist \
-	/setup/slapd.ldif
+	/setup/slapd.dist
 
 COPY dist/conf.dist/* /setup/conf.dist/
 COPY dist/ldif.dist/* /setup/ldif.dist/
-COPY dist/slapd.ldif/* /setup/slapd.ldif/
+COPY dist/slapd.dist/* /setup/slapd.dist/
 
 ONBUILD COPY conf/ /setup/conf/
 ONBUILD COPY ldif/ /setup/ldif/
